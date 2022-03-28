@@ -1,4 +1,6 @@
-apply plugin: 'kotlin2js'
+plugins {
+    id 'org.jetbrains.kotlin.platform.js'
+}
 
 dependencies {
     // do not remove until KT-25488 is fixed

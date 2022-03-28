@@ -9,8 +9,10 @@ buildscript {
     }
 }
 
-apply plugin: "kotlin2js"
-apply plugin: 'java'
+plugins {
+    id 'org.jetbrains.kotlin.platform.js'
+    id 'java'
+}
 
 def outDir = "${buildDir}/kotlin2js/main/"
 compileKotlin2Js.kotlinOptions.moduleKind = "plain"
