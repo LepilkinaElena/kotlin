@@ -1141,7 +1141,8 @@ public class Parser {
                 return pn;
 
             case TokenStream.IMPORT:
-                if (ts.peekToken() != TokenStream.LP) {
+                // for import() and import.meta syntax
+                if (ts.peekToken() != TokenStream.LP && ts.peekToken() != TokenStream.DOT) {
                     reportError(ts, "msg.syntax");
                 }
                 return nf.createName(TokenStream.tokenToName(TokenStream.IMPORT), position);
