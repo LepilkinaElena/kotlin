@@ -11,7 +11,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.jetbrains.kotlin.cli.common.repl.ReplEvalResult
 import org.jetbrains.kotlin.scripting.js.makeReplCodeLine
-import org.junit.Ignore
 
 abstract class AbstractReplTestRunner : TestCase() {
     abstract fun getTester(): AbstractJsReplTest
@@ -123,8 +122,8 @@ abstract class AbstractReplTestRunner : TestCase() {
         Assert.assertEquals("OK", compileAndEval(lines))
     }
 
-    // because we use Object.assign inside type checks and nashorn does not support  it
-    @Ignore
+    /* Ignore annotation doesn't work, so comment it
+    @Ignore("we use Object.assign inside type checks and nashorn does not support  it")
     @Test
     fun testInstanceOf() {
         val lines = listOf(
@@ -137,6 +136,7 @@ abstract class AbstractReplTestRunner : TestCase() {
         )
         Assert.assertEquals("truetrue", compileAndEval(lines))
     }
+     */
 
     @Test
     fun testScopes() {
