@@ -47,6 +47,7 @@ fun KGPBaseTest.project(
     projectPath.addDefaultBuildFiles()
     projectPath.enableCacheRedirector()
     projectPath.enableAndroidSdk()
+    projectPath.addXmxOptions()
     if (addHeapDumpOptions) projectPath.addHeapDumpOptions()
 
     val gradleRunner = GradleRunner
@@ -535,3 +536,47 @@ private fun Path.addHeapDumpOptions() {
         }
     }
 }
+
+private fun Path.addXmxOptions() {
+    val propertiesFile = resolve("gradle.properties")
+    if (!propertiesFile.exists()) propertiesFile.createFile()
+
+    val propertiesContent = propertiesFile.readText()
+    val (existingJvmArgsLine, otherLines) = propertiesContent
+        .lines()
+        .partition {
+            it.trim().startsWith("org.gradle.jvmargs")
+        }
+
+    val xmxStr = "-Xmx1g"
+
+    if (existingJvmArgsLine.isEmpty()) {
+        propertiesFile.writeText(
+            """
+            |# modified in addXmxOptions
+            |org.gradle.jvmargs=$xmxStr
+            | 
+            |$propertiesContent
+            """.trimMargin()
+        )
+    } else {
+        val argsLine = existingJvmArgsLine.first()
+        val appendedOptions = buildString {
+            if (!argsLine.contains("-Xmx")) append(" $xmxStr")
+        }
+
+        if (appendedOptions.isNotEmpty()) {
+            propertiesFile.writeText(
+                """
+                # modified in addHeapDumpOptions
+                $argsLine$appendedOptions
+                
+                ${otherLines.joinToString(separator = "\n")}
+                """.trimIndent()
+            )
+        } else {
+            println("<=== Xmx options are already exists! ===>")
+        }
+    }
+}
+
